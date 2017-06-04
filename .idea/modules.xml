@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/Inheritance.iml" filepath="$PROJECT_DIR$/.idea/Inheritance.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Inheritance.iml" filepath="$PROJECT_DIR$/.idea/modules/Inheritance.iml" />
+      <module fileurl="file://$PROJECT_DIR$/contract/contract.iml" filepath="$PROJECT_DIR$/contract/contract.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/node/node.iml" filepath="$PROJECT_DIR$/.idea/modules/node/node.iml" />
     </modules>
   </component>
 </project>
