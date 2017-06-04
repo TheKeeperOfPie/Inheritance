@@ -7,6 +7,7 @@ contract Inheritance {
     mapping(address => Funding) heirFunding;
     mapping(address => uint) heirWithdrawal;
     mapping(address => uint) transferWithdrawal;
+
     uint totalShares;
 
     uint lastTimeAlive;
@@ -15,8 +16,10 @@ contract Inheritance {
     bool disabled;
     bool confirmedDead;
 
+    /* Store the total at first post-death access so shares are calculated from constant balance */
     uint totalAtDeath;
 
+    /* Emit an event on each push action, notifying of possible malicious activity */
     event Activity(address actor);
 
     function Inheritance() payable {
@@ -25,15 +28,17 @@ contract Inheritance {
         lockTime = 60 days;
     }
 
-    /* Fallback to accept funds from any address while enabled */
+    /* Accept funds from any address while enabled */
     function() payable enabled {}
 
+    /* Only run when owner is alive and has not disabled contract */
     modifier enabled() {
         Activity(msg.sender);
         require(!disabled);
         _;
     }
 
+    /* Only allow access by owner of contract */
     modifier isOwner() {
         Activity(msg.sender);
         require(msg.sender == owner);
@@ -41,6 +46,7 @@ contract Inheritance {
         _;
     }
 
+    /* Only run when owner is presumed dead */
     modifier whenDead() {
         Activity(msg.sender);
         require (now >= lastTimeAlive + lockTime);
@@ -81,8 +87,10 @@ contract Inheritance {
         owner = newOwner;
     }
 
+    /* Prove owner is alive */
     function refresh() isOwner {}
 
+    /* Update the lock time (also resets last alive time) */
     function setLockTimeInDays(uint time) isOwner {
         lockTime = time * 1 days;
     }
@@ -108,6 +116,7 @@ contract Inheritance {
         delete heirFunding[heirAddress];
     }
 
+    /* Drain this contract in case of an emergency */
     function drain() isOwner {
         owner.transfer(this.balance);
     }
@@ -126,6 +135,7 @@ contract Inheritance {
         disabled = true;
     }
 
+    /* Persist the share amount with a withdrawn state toggleable*/
     struct Funding {
         uint shares;
         bool withdrawn;
